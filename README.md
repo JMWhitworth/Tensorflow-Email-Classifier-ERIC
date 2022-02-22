@@ -19,7 +19,7 @@ Eric = eric.Eric(
 print(Eric.predict(["testemail@testingemails.com"])[0])
 ```
 
-On first run you must set training to True and pass valid CSV data for the training.
+On first run you must set training to True and pass valid CSV data for the training. The pre-included data was gathered via simple webscraping, and is not individually owned by me.
 
 CSV format:
 ```
