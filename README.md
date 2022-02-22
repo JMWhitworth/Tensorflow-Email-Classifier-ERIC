@@ -18,3 +18,14 @@ Eric = eric.Eric(
 
 print(Eric.predict(["testemail@testingemails.com"])[0])
 ```
+
+On first run you must set training to True and pass valid CSV data for the training.
+
+CSV format:
+```
+label,target
+thisisvalid@emails.com,1
+notanemail,0
+```
+
+Once trained it'll save the model and you can then change training to False and use as required.
