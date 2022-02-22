@@ -1,4 +1,4 @@
-# ERIC
+# ERIC - Email | Retriever | In | Code
 TF Keras Model for binary word classification.
 
 
