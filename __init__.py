@@ -1,1 +1,1 @@
-from eric import *
+from .eric_core import Eric
