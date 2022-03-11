@@ -121,5 +121,5 @@ class Eric():
 
 
 if __name__ == "__main__":
-    eric = Eric(training=True)
+    eric = Eric()
     print(eric.predict(["hello"]))
