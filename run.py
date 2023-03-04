@@ -1,5 +1,7 @@
-from eric_core import Eric
+from core import Eric
 
 if __name__ == "__main__":
-    eric = Eric(training=True)
-    print(eric.predict(["jack@inventis.uk"]))
+    eric = Eric(
+        training=True,
+        dataPath="data/eric_standard.csv"
+    )
