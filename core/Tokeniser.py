@@ -1,29 +1,26 @@
-import string
-
 class Tokeniser:
-    def __init__(self, characters:str=string.printable, paddingSize:int=20, paddingChar=0) -> None:
-        self.characters = characters
+    def __init__(self, paddingSize:int=20, paddingChar=0) -> None:
+        self.characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"+'"'
         self.paddingSize = paddingSize
         self.paddingChar = paddingChar
         
-        self.encoder, self.decoder = self.createEncoder(characters)
-
+        self.encoder, self.decoder = self.createEncoder(self.characters)
+    
     def createEncoder(self, characters:str) -> tuple:
         encoder, decoder = {}, {}
         
         for i, char in enumerate(characters):
-            i+=1 #Skips 0 for padding character
+            i+=1 #Skips 0, as its reserved for padding character
             encoder[char] = i
             decoder[i] = [char]
         
         return (encoder, decoder)
-
-    def encode(self, input:str) -> list:
-        input = str(input)
+    
+    def encode(self, item:str) -> list:
+        item = self.normalise(item)
         encoded = []
         
-        #Encode the characters
-        for character in input:
+        for character in item:
             if character in self.characters:
                 encoded.append(self.encoder[character])
             else:
@@ -32,20 +29,30 @@ class Tokeniser:
                 self.encoder, self.decoder = self.createEncoder(self.characters)
                 encoded.append(self.encoder[character])
         
-        #Pad & trim to correct length
-        while len(encoded) < self.paddingSize:
-            encoded.append(self.paddingChar)
-        while len(encoded) > self.paddingSize:
-            del encoded[-1]
-        
+        encoded = self.padd(encoded)
         return encoded
     
-    def decode(self, input:list) -> str:
+    def decode(self, item:list) -> str:
         decoded = ""
-        for character in input:
+        for character in item:
             if character != self.paddingChar:
                 decoded += self.decoder[character][0]
-        return decoded
-
-    def normalise(self, input:list) -> list:
-        return [item/len(self.characters) for item in input]
+        return self.normalise(decoded)
+    
+    def normalise(self, item:str) -> str:
+        item = str(item)
+        
+        #Fixes issue where multiple types of new lines are used
+        item = "".join(l for l in item.splitlines() if l)
+        
+        #Remove undesired characters
+        item = item.lower().replace('\n', '').replace(' ','').replace(' ','')
+        
+        return item.strip()
+    
+    def padd(self, item:list) -> list:
+        while len(item) < self.paddingSize:
+            item.append(self.paddingChar)
+        while len(item) > self.paddingSize:
+            del item[-1]
+        return item
