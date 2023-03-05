@@ -1,5 +1,5 @@
 # ERIC - Email | Retriever | In | Code
-TF Keras Model for binary word classification.
+TF Keras Model for text classification.
 
 
 
@@ -7,16 +7,20 @@ TF Keras Model for binary word classification.
 This can be called from a subfolder as a module as follows:
 
 ```
-import eric
+from core import Eric
 
-Eric = eric.Eric(
-    training=False,
-    max_length=max_email_length,
-    model_path="eric/model",
-    training_data="eric/data/train.csv",
-    testing_data="eric/data/test.csv")
-
-print(Eric.predict(["testemail@testingemails.com"])[0])
+if __name__ == "__main__":
+    eric = Eric(
+        training=True,
+        dataPath="data/eric_standard.csv"
+    )
+    eric.predict("Is this an email?")
+    eric.predict("oristhis@example.com")
+```
+Outputs:
+```
+0
+1
 ```
 
 On first run you must set training to True and pass valid CSV data for the training. The pre-included data was gathered via simple webscraping, and is not individually owned by me. If your contact info is on there and you would like it removed please notify me and I'll remove it immediately.

@@ -29,10 +29,10 @@ class Eric:
     
     def trainModel(self, dataPath:str) -> None:
         #Load in the data
-        data = pd.read_csv(dataPath)#.iloc[:100000]
+        data = pd.read_csv(dataPath).iloc[:1000]
         
         #Shuffle
-        data = np.random.shuffle(data.values)
+        #data = np.random.shuffle(data.values)
         
         #Encode the labels and save to numpy array
         data['label'] = data.label.map(self.tokeniser.encode)
@@ -71,10 +71,7 @@ class Eric:
             validation_data=(testingLabels, testingTargets),
             verbose=2
         )
-        
-        while True:
-            print(self.predict(self.tokeniser.encode(input("Enter something to test: "))))
-        
+    
     def loadmodel(self, dataPath:str) -> None:
         """
         USES THE PATH TO LOAD A PRE-TRAINED MODEL
