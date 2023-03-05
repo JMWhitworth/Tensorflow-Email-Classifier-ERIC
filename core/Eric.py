@@ -28,56 +28,51 @@ class Eric:
     
     def trainModel(self, dataPath:str) -> None:
         #Load in the data
-        data = pd.read_csv(dataPath).iloc[:10000]
+        data = pd.read_csv(dataPath)#.iloc[:100000]
         
         #Encode the labels and save to numpy array
         data['label'] = data.label.map(self.tokeniser.encode)
-        data['label'] = data.label.map(self.tokeniser.normalise)
         data = data.to_numpy()
         
         #Enforce datatypes of floats for labels and ints for targets
         dataLabels = [[float(x) for x in seq] for seq in data[:, 0]]
-        dataTargets = data[:, 1]
-        dataTargets = np.where(dataTargets == 'NaN', 0, dataTargets.astype('int')).tolist()
+        dataTargets = data[:, 1].tolist()
         
         #Divide into training and testing datasets
-        split = int(len(data)*0.1)
+        split = int(len(data)*0.15)
         trainingLabels = dataLabels[split:]
         trainingTargets = dataTargets[split:]
         testingLabels = dataLabels[:split]
         testingTargets = dataTargets[:split]
         
-
-        print(len(trainingLabels))
-        print(len(trainingTargets))
-        input("Pause")
-
         #Build model
-        model = tf.keras.models.Sequential([
+        self.model = tf.keras.models.Sequential([
             tf.keras.layers.Embedding(len(self.tokeniser.characters), 32, input_length=self.tokeniser.paddingSize),
-            tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dropout(0.1),
             tf.keras.layers.LSTM(64, dropout=0.1),
             tf.keras.layers.Dense(1, activation='sigmoid')
         ])
+        print(self.model.summary())
         
-        model.compile(optimizer=tf.keras.optimizers.Adam(
+        self.model.compile(optimizer=tf.keras.optimizers.Adam(
             learning_rate=0.001),
             loss=tf.keras.losses.BinaryCrossentropy(from_logits=False),
             metrics=['accuracy']
         )
         
-        model.fit(trainingLabels, trainingTargets, epochs=40, validation_data=(testingLabels, testingTargets), verbose=2)
-        model.evaluate([self.tokeniser.encode('jack@gmail.com')])
-    
-    def loadModel(self, dataPath:str) -> None:
+        self.model.fit(trainingLabels, trainingTargets, epochs=4, validation_data=(testingLabels, testingTargets), verbose=2)
+        
+        print(self.predict(self.tokeniser.encode("jackthemanhelloImprettycool")))
+        print(self.predict(self.tokeniser.encode("itthisanemail??@asd")))
+        print(self.predict(self.tokeniser.encode("@what@is@this")))
+
+    def loadmodel(self, dataPath:str) -> None:
         """
         USES THE PATH TO LOAD A PRE-TRAINED MODEL
         """
         print("Will load model")
     
     def predict(self, potentialEmail:str) -> bool:
-        """
-        TEST THE POTENTIAL EMAIL AGAINST THE MODEL
-        RETURNS BOOL OF PREDICTION
-        """
-        return 1
+        prediction = self.model.predict([self.tokeniser.encode(potentialEmail)])
+        prediction = [1 if p > 0.5 else 0 for p in prediction]
+        return(prediction[0][0])
