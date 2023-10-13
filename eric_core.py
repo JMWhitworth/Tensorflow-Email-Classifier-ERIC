@@ -14,7 +14,7 @@ import pickle
 
 
 class Eric():
-    def __init__(self, training=False, max_length=50, epochs=15, model_path="model", training_data="data/train.csv", testing_data="data/test.csv", activation="sigmoid"):
+    def __init__(self, training=False, max_length=40, epochs=5, model_path="model", training_data="data/train.csv", testing_data="data/test.csv", activation="sigmoid"):
         self.training = training
         self.max_length = max_length
         self.epochs = epochs
